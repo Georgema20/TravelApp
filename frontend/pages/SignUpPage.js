@@ -1,19 +1,74 @@
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 import { useState } from 'react/cjs/react.development';
+import firebaseSignIn from '../../backend/signUp';
 
 const SignUpPage = () => {
 
+  //Creating state for log in text inputs
   const [signUpState, setSignUpState] = useState({
     username: null,
-    email:null,
-    confirmEmail:null,
+    email: null,
+    confirmEmail: null,
     password: null,
-    confirmPassword:null
+    confirmPassword: null,
   });
 
-  const SignUpHandler = () => {
-    console.log(signUpState);
-    
+  //creating state for message 
+  const [message, setMessage] = useState({words:null,styles:null});
+
+  //function that handles sign ups 
+  const SignUpHandler = async () => {
+    //Check to see if all things filled
+    if(!signUpState.username || !signUpState.email || !signUpState.password ){
+     
+      setMessage({ words: 'Fill all inputs', styles: null });
+      setTimeout(() => {
+        setMessage({ words: null, styles: null });
+      }, 2500);
+      return;
+    }
+    //Need check to see if user already exists
+
+    //Check to see if pass is same
+if (signUpState.password!=signUpState.confirmPassword) {
+  setMessage({ words: 'Passwords do not match', styles: null });
+  setTimeout(() => {
+    setMessage({ words: null, styles: null });
+  }, 2500);
+  return;
+}
+    //Check to see if email is same
+if (signUpState.email != signUpState.confirmEmail) {
+  setMessage({ words: 'Emails do not match', styles: null });
+  setTimeout(() => {
+    setMessage({ words: null, styles: null });
+  }, 2500);
+  return;
+}
+    const response = await firebaseSignIn(
+      signUpState.email,
+      signUpState.password,
+      signUpState.username
+    );
+    //Success case
+    if (response === 'success') {
+      setSignUpState({
+        username: null,
+        email: null,
+        confirmEmail: null,
+        password: null,
+        confirmPassword: null,
+      });
+      setMessage({ words: 'Sucess', styles: null });
+    }
+    //Error case
+    else {
+      setMessage({ words: response, styles: null });
+    }
+    //Reset message
+    setTimeout(() => {
+      setMessage({ words: null, styles: null });
+    }, 2500);
   };
 
   return (
@@ -56,6 +111,7 @@ const SignUpPage = () => {
       />
       <View>
         <Text onPress={SignUpHandler}>Button</Text>
+        { message.words ? <Text>{message.words}</Text> : null}
       </View>
     </View>
   );
