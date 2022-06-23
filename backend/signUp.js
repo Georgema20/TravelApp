@@ -34,5 +34,4 @@ const firebaseSignIn = async (email, password, username) => {
   return response;
 };
 
-
 export default firebaseSignIn;
