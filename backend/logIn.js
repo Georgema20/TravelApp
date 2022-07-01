@@ -10,21 +10,22 @@ const firebaseLogIn = async (email, password) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log(user);
-      return 'success';
+      return {message:'success', 
+  data: user};
     })
     //Error Handling
     .catch((error) => {
       const errorMessage = error.message;
       switch (errorMessage) {
         case 'Firebase: Error (auth/user-not-found).':
-          return 'User not found';
+          return {message:'User not found', 
+  data: null};
         case 'Firebase: Error (auth/wrong-password).':
-          return 'Wrong password';
+          return { message: 'Wrong password', data: null };
         case 'Firebase: Error (auth/invalid-email).':
-          return 'Invalid email';
+          return { message: 'Invalid email', data: null }
         default:
-          return 'An error has occured';
+          return { message: 'An error has occured', data: null }
       }
     });
 
