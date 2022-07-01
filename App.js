@@ -2,13 +2,16 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import LogInPage from './frontend/pages/LogInPage';
 import SignUpPage from './frontend/pages/SignUpPage';
+import AuthContextProvider from './frontend/store/auth-context';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-     <LogInPage />
-     <SignUpPage/>
-    </View>
+    <AuthContextProvider>
+      <View style={styles.container}>
+        <LogInPage />
+        <SignUpPage />
+      </View>
+    </AuthContextProvider>
   );
 }
 

@@ -1,8 +1,13 @@
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import firebaseSignIn from '../../backend/signUp';
+import { useContext } from 'react';
+import { AuthContext } from '../store/auth-context';
+import LogOutButton from '../components/LogOutButton';
 
 const SignUpPage = () => {
+  //create context 
+  const ctx = useContext(AuthContext);
 
   //Creating state for log in text inputs
   const [signUpState, setSignUpState] = useState({
@@ -28,6 +33,8 @@ const SignUpPage = () => {
       return;
     }
     //Need check to see if user already exists
+    //TO DO 
+
 
     //Check to see if pass is same
 if (signUpState.password!=signUpState.confirmPassword) {
@@ -51,7 +58,10 @@ if (signUpState.email != signUpState.confirmEmail) {
       signUpState.username
     );
     //Success case
-    if (response === 'success') {
+    if (response.message === 'success') {
+      //authenticating in ctx
+      ctx.authenticate(response.data.uid);
+      //clearing out everything
       setSignUpState({
         username: null,
         email: null,
@@ -63,7 +73,7 @@ if (signUpState.email != signUpState.confirmEmail) {
     }
     //Error case
     else {
-      setMessage({ words: response, styles: null });
+      setMessage({ words: response.message, styles: null });
     }
     //Reset message
     setTimeout(() => {
@@ -71,8 +81,11 @@ if (signUpState.email != signUpState.confirmEmail) {
     }, 2500);
   };
 
+  
+
   return (
     <View style={styles.container}>
+      {ctx.isAuthenticated ? <Text>Logged In</Text> : null}
       <Text>Sign Up Page</Text>
       <TextInput
         placeholder="Username"
@@ -111,8 +124,9 @@ if (signUpState.email != signUpState.confirmEmail) {
       />
       <View>
         <Text onPress={SignUpHandler}>Button</Text>
-        { message.words ? <Text>{message.words}</Text> : null}
+        {message.words ? <Text>{message.words}</Text> : null}
       </View>
+     <LogOutButton/>
     </View>
   );
 };

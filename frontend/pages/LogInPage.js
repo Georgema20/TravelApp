@@ -1,34 +1,39 @@
 import { Text, TextInput, View, StyleSheet} from 'react-native';
-import { useState } from 'react/cjs/react.development';
+import { useState, useContext} from 'react';
 import firebaseLogIn from '../../backend/logIn';
+import { AuthContext } from '../store/auth-context';
 
 
 const LogInPage = () => {
+  //create context
+  const ctx = useContext(AuthContext);
+
   //Creating state for log in text inputs
-  const [logInState, setLogInState] = useState({email:null, 
-  password: null})
+  const [logInState, setLogInState] = useState({ email: null, password: null });
 
-  //Creating state for message 
+  //Creating state for message
   const [message, setMessage] = useState({ words: null, styles: null });
-  
-  //function that handles log in 
-  const logInHandler = async () => {
 
+  //function that handles log in
+  const logInHandler = async () => {
     const response = await firebaseLogIn(logInState.email, logInState.password);
 
-    if (response === 'success') {
+    if (response.message === 'success') {
+      //authenticating in ctx
+      ctx.authenticate(response.data.uid);
+      //clearing out everything
       setLogInState({ email: null, password: null });
     }
 
     //Error case
     else {
-      setMessage({ words: response, styles: null });
+      setMessage({ words: response.message, styles: null });
     }
     //Reset message
     setTimeout(() => {
       setMessage({ words: null, styles: null });
     }, 2500);
-  }
+  };
 
   return (
     <View style={styles.container}>

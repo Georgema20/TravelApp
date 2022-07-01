@@ -14,20 +14,27 @@ const firebaseSignIn = async (email, password, username) => {
       const user = userCredential.user;
       console.log(user);
       // ...
-      return 'success';
+      return {message:'success', 
+  data: user};
     })
     .catch((error) => {
       const errorMessage = error.message;
       //Error Handling
       switch (errorMessage) {
         case 'Firebase: Error (auth/email-already-in-use).':
-          return 'Email already in use';
+          return { message: 'Email already in use', data: null}
         case 'Firebase: Error (auth/invalid-email).':
-          return 'Invalid email';
+          return { message: 'Invalid email', data: null}
         case 'Firebase: Password should be at least 6 characters (auth/weak-password).':
-          return 'Weak password! Needs to be 6+ characters!';
+          return {
+            message: 'Weak password! Needs to be 6+ characters!',
+            data: null,
+          };
         default:
-          return 'Account could not be made';
+          return {
+            message: 'Account could not be made',
+            data: null,
+          };
       }
     });
 
