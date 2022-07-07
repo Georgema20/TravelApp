@@ -4,7 +4,7 @@ import LogOutButton from "../components/LogOutButton";
 import CenteredContainer from '../components/CenteredContainer';
 
 
-const SignedInPage = ({navigation}) =>{
+const SignedInPage = () =>{
 
 return (
   <CenteredContainer>

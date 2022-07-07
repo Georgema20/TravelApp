@@ -9,6 +9,10 @@ const SignUpPage = ({navigation}) => {
   //create context 
   const ctx = useContext(AuthContext);
 
+  //isMounted (to prevent isMounted memoryleak erros)
+
+  let isMounted = true;
+
   //Creating state for log in text inputs
   const [signUpState, setSignUpState] = useState({
     username: null,
@@ -28,7 +32,7 @@ const SignUpPage = ({navigation}) => {
      
       setMessage({ words: 'Fill all inputs', styles: null });
       setTimeout(() => {
-        setMessage({ words: null, styles: null });
+        if(isMounted){setMessage({ words: null, styles: null })};
       }, 2500);
       return;
     }
@@ -40,7 +44,7 @@ const SignUpPage = ({navigation}) => {
 if (signUpState.password!=signUpState.confirmPassword) {
   setMessage({ words: 'Passwords do not match', styles: null });
   setTimeout(() => {
-    setMessage({ words: null, styles: null });
+    if(isMounted){setMessage({ words: null, styles: null })};
   }, 2500);
   return;
 }
@@ -48,7 +52,7 @@ if (signUpState.password!=signUpState.confirmPassword) {
 if (signUpState.email != signUpState.confirmEmail) {
   setMessage({ words: 'Emails do not match', styles: null });
   setTimeout(() => {
-    setMessage({ words: null, styles: null });
+    if(isMounted){setMessage({ words: null, styles: null })};
   }, 2500);
   return;
 }
@@ -77,11 +81,17 @@ if (signUpState.email != signUpState.confirmEmail) {
     }
     //Reset message
     setTimeout(() => {
-      setMessage({ words: null, styles: null });
+      if(isMounted){setMessage({ words: null, styles: null });}
     }, 2500);
   };
 
   const LogInHandler = () => {
+    //change isMounted
+    isMounted = false;
+
+    //change message
+    setMessage({ words: null, styles: null });
+
     navigation.navigate('LogIn');
   }
   
