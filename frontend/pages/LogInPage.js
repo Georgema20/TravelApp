@@ -1,12 +1,24 @@
 import { Text, TextInput, View, StyleSheet} from 'react-native';
-import { useState, useContext} from 'react';
+import { useState, useContext, useEffect} from 'react';
 import firebaseLogIn from '../../backend/logIn';
 import { AuthContext } from '../store/auth-context';
+import CenteredContainer from '../components/CenteredContainer';
 
 
-const LogInPage = () => {
+const LogInPage = ({navigation}) => {
   //create context
   const ctx = useContext(AuthContext);
+
+
+  //useEffect -make logged in if already logged in 
+  useEffect(()=>{
+    if(ctx.isAuthenticated){
+      navigation.navigate('SignedIn');
+    }
+  })
+
+ 
+
 
   //Creating state for log in text inputs
   const [logInState, setLogInState] = useState({ email: null, password: null });
@@ -35,36 +47,42 @@ const LogInPage = () => {
     }, 2500);
   };
 
+  //sign uphandler 
+  const signUpHandler = () =>{
+    navigation.navigate('SignUp');
+  }
+
+
   return (
-    <View style={styles.container}>
-      <Text>Log In Page</Text>
-      <TextInput
-        placeholder="Email"
-        value={logInState.email}
-        onChangeText={(address) => {
-          setLogInState({ ...logInState, email: address });
-        }}
-      />
-      <TextInput
-        placeholder="Password"
-        value={logInState.password}
-        onChangeText={(passwd) => {
-          setLogInState({ ...logInState, password: passwd });
-        }}
-      />
-      <View>
-        <Text onPress={logInHandler}>Button</Text>
-        {message.words ? <Text>{message.words}</Text> : null}
+    <CenteredContainer>
+      <View style={styles.container}>
+        <Text>Log In Page</Text>
+        <TextInput
+          placeholder="Email"
+          value={logInState.email}
+          onChangeText={(address) => {
+            setLogInState({ ...logInState, email: address });
+          }}
+        />
+        <TextInput
+          placeholder="Password"
+          value={logInState.password}
+          onChangeText={(passwd) => {
+            setLogInState({ ...logInState, password: passwd });
+          }}
+        />
+        <View>
+          <Text onPress={logInHandler}>Button</Text>
+          <Text onPress={signUpHandler}>Sign Up</Text>
+          {message.words ? <Text>{message.words}</Text> : null}
+        </View>
       </View>
-    </View>
+    </CenteredContainer>
   );
 };
 
 
 const styles = StyleSheet.create({
-  container: {
-   margin:20, 
-  },
 });
 
 export default LogInPage;

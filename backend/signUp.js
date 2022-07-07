@@ -12,8 +12,6 @@ const firebaseSignIn = async (email, password, username) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log(user);
-      // ...
       return {message:'success', 
   data: user};
     })
