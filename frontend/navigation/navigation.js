@@ -1,6 +1,7 @@
 //Need to create the stack navigator 
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 //importing pages 
 import LogInPage from "../pages/LogInPage";
 import SignUpPage from "../pages/SignUpPage";

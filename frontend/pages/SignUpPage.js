@@ -11,7 +11,7 @@ const SignUpPage = ({navigation}) => {
 
   //isMounted (to prevent isMounted memoryleak erros)
 
-  let isMounted = true;
+  const [isMounted, setIsMounted] = useState(null);
 
   //Creating state for log in text inputs
   const [signUpState, setSignUpState] = useState({
@@ -32,6 +32,7 @@ const SignUpPage = ({navigation}) => {
      
       setMessage({ words: 'Fill all inputs', styles: null });
       setTimeout(() => {
+        console.log(isMounted);
         if(isMounted){setMessage({ words: null, styles: null })};
       }, 2500);
       return;
@@ -43,6 +44,7 @@ const SignUpPage = ({navigation}) => {
     //Check to see if pass is same
 if (signUpState.password!=signUpState.confirmPassword) {
   setMessage({ words: 'Passwords do not match', styles: null });
+
   setTimeout(() => {
     if(isMounted){setMessage({ words: null, styles: null })};
   }, 2500);
@@ -85,9 +87,9 @@ if (signUpState.email != signUpState.confirmEmail) {
     }, 2500);
   };
 
-  const LogInHandler = () => {
+  const LogInHandler = async () => {
     //change isMounted
-    isMounted = false;
+    await setIsMounted(false);
 
     //change message
     setMessage({ words: null, styles: null });

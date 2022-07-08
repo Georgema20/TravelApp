@@ -9,7 +9,7 @@ const LogInPage = ({navigation}) => {
 
   //mounted (to prevent memoryleaks and warnings)
 
-  let isMounted = true; 
+  const [isMounted, setIsMounted] = useState(true); 
 
   //create context
   const ctx = useContext(AuthContext);
@@ -62,12 +62,12 @@ if (!logInState.email || !logInState.password ) {
   };
 
   //sign uphandler 
-  const signUpHandler = () =>{
+  const signUpHandler = async () =>{
     //set to empty or else it will keep bc it a stack nav
      setLogInState( { email: null, password: null });
 
      //change isMounted 
-     isMounted = false; 
+     await setIsMounted(false); 
 
      //change message 
      setMessage({ words: null, styles: null });

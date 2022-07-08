@@ -8,7 +8,7 @@ const LogOutButton = () => {
   //create context
   const ctx = useContext(AuthContext);
 
-  //creat navigation
+  //creat navigation bc component and not page that is being displayed on app
   const navigation = useNavigation();
 
   //log out function
