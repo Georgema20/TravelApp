@@ -3,11 +3,15 @@ import { useState } from 'react/cjs/react.development';
 import firebaseSignIn from '../../backend/signUp';
 import { useContext } from 'react';
 import { AuthContext } from '../store/auth-context';
-import LogOutButton from '../components/LogOutButton';
+import CenteredContainer from '../components/CenteredContainer';
 
-const SignUpPage = () => {
+const SignUpPage = ({navigation}) => {
   //create context 
   const ctx = useContext(AuthContext);
+
+  //isMounted (to prevent isMounted memoryleak erros)
+
+  const [isMounted, setIsMounted] = useState(null);
 
   //Creating state for log in text inputs
   const [signUpState, setSignUpState] = useState({
@@ -28,7 +32,8 @@ const SignUpPage = () => {
      
       setMessage({ words: 'Fill all inputs', styles: null });
       setTimeout(() => {
-        setMessage({ words: null, styles: null });
+        console.log(isMounted);
+        if(isMounted){setMessage({ words: null, styles: null })};
       }, 2500);
       return;
     }
@@ -39,8 +44,9 @@ const SignUpPage = () => {
     //Check to see if pass is same
 if (signUpState.password!=signUpState.confirmPassword) {
   setMessage({ words: 'Passwords do not match', styles: null });
+
   setTimeout(() => {
-    setMessage({ words: null, styles: null });
+    if(isMounted){setMessage({ words: null, styles: null })};
   }, 2500);
   return;
 }
@@ -48,7 +54,7 @@ if (signUpState.password!=signUpState.confirmPassword) {
 if (signUpState.email != signUpState.confirmEmail) {
   setMessage({ words: 'Emails do not match', styles: null });
   setTimeout(() => {
-    setMessage({ words: null, styles: null });
+    if(isMounted){setMessage({ words: null, styles: null })};
   }, 2500);
   return;
 }
@@ -69,7 +75,7 @@ if (signUpState.email != signUpState.confirmEmail) {
         password: null,
         confirmPassword: null,
       });
-      setMessage({ words: 'Sucess', styles: null });
+      setMessage({ words: 'Success', styles: null });
     }
     //Error case
     else {
@@ -77,57 +83,67 @@ if (signUpState.email != signUpState.confirmEmail) {
     }
     //Reset message
     setTimeout(() => {
-      setMessage({ words: null, styles: null });
+      if(isMounted){setMessage({ words: null, styles: null });}
     }, 2500);
   };
 
+  const LogInHandler = async () => {
+    //change isMounted
+    await setIsMounted(false);
+
+    //change message
+    setMessage({ words: null, styles: null });
+
+    navigation.navigate('LogIn');
+  }
   
 
   return (
-    <View style={styles.container}>
-      {ctx.isAuthenticated ? <Text>Logged In</Text> : null}
-      <Text>Sign Up Page</Text>
-      <TextInput
-        placeholder="Username"
-        value={signUpState.username}
-        onChangeText={(user) => {
-          setSignUpState({ ...signUpState, username: user });
-        }}
-      />
-      <TextInput
-        placeholder="Email"
-        value={signUpState.email}
-        onChangeText={(email) => {
-          setSignUpState({ ...signUpState, email: email });
-        }}
-      />
-      <TextInput
-        placeholder="Confirm Email"
-        value={signUpState.confirmEmail}
-        onChangeText={(email) => {
-          setSignUpState({ ...signUpState, confirmEmail: email });
-        }}
-      />
-      <TextInput
-        placeholder="Password"
-        value={signUpState.password}
-        onChangeText={(pass) => {
-          setSignUpState({ ...signUpState, password: pass });
-        }}
-      />
-      <TextInput
-        placeholder="Confirm Password"
-        value={signUpState.confirmPassword}
-        onChangeText={(pass) => {
-          setSignUpState({ ...signUpState, confirmPassword: pass });
-        }}
-      />
-      <View>
-        <Text onPress={SignUpHandler}>Button</Text>
-        {message.words ? <Text>{message.words}</Text> : null}
+    <CenteredContainer>
+      <View style={styles.container}>
+        <Text>Sign Up Page</Text>
+        <TextInput
+          placeholder="Username"
+          value={signUpState.username}
+          onChangeText={(user) => {
+            setSignUpState({ ...signUpState, username: user });
+          }}
+        />
+        <TextInput
+          placeholder="Email"
+          value={signUpState.email}
+          onChangeText={(email) => {
+            setSignUpState({ ...signUpState, email: email });
+          }}
+        />
+        <TextInput
+          placeholder="Confirm Email"
+          value={signUpState.confirmEmail}
+          onChangeText={(email) => {
+            setSignUpState({ ...signUpState, confirmEmail: email });
+          }}
+        />
+        <TextInput
+          placeholder="Password"
+          value={signUpState.password}
+          onChangeText={(pass) => {
+            setSignUpState({ ...signUpState, password: pass });
+          }}
+        />
+        <TextInput
+          placeholder="Confirm Password"
+          value={signUpState.confirmPassword}
+          onChangeText={(pass) => {
+            setSignUpState({ ...signUpState, confirmPassword: pass });
+          }}
+        />
+        <View>
+          <Text onPress={LogInHandler}>I have an account</Text>
+          <Text onPress={SignUpHandler}>Button</Text>
+          {message.words ? <Text>{message.words}</Text> : null}
+        </View>
       </View>
-     <LogOutButton/>
-    </View>
+    </CenteredContainer>
   );
 };
 

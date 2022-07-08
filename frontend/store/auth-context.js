@@ -29,6 +29,7 @@ function AuthContextProvider({children}){
     //Get uid to see if anything 
     async function fetchToken(){
       const storedUid= await AsyncStorage.getItem('uid');
+      
     //if found one then set 
     if(storedUid){
       setUid(storedUid);
