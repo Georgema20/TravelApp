@@ -3,24 +3,23 @@ import { useState, useContext, useEffect} from 'react';
 import firebaseLogIn from '../../backend/logIn';
 import { AuthContext } from '../store/auth-context';
 import CenteredContainer from '../components/CenteredContainer';
+import AppLoading from 'expo-app-loading';
 
 
 const LogInPage = ({navigation}) => {
-
   //mounted (to prevent memoryleaks and warnings)
 
-  const [isMounted, setIsMounted] = useState(true); 
+  const [isMounted, setIsMounted] = useState(true);
 
   //create context
   const ctx = useContext(AuthContext);
 
-  //useEffect -make logged in if already logged in 
-  useEffect(()=>{
-    if(ctx.isAuthenticated){
+  //useEffect -make logged in if already logged in
+  useEffect(() => {
+    if (ctx.isAuthenticated) {
       navigation.navigate('SignedIn');
     }
-  })
-
+  });
 
   //Creating state for log in text inputs
   const [logInState, setLogInState] = useState({ email: null, password: null });
@@ -30,17 +29,16 @@ const LogInPage = ({navigation}) => {
 
   //function that handles log in
   const logInHandler = async () => {
-
     //if there is something in both boxes
-if (!logInState.email || !logInState.password ) {
-  setMessage({ words: 'Fill all inputs', styles: null });
-  setTimeout(() => {
-    if (isMounted) {
-      setMessage({ words: null, styles: null });
+    if (!logInState.email || !logInState.password) {
+      setMessage({ words: 'Fill all inputs', styles: null });
+      setTimeout(() => {
+        if (isMounted) {
+          setMessage({ words: null, styles: null });
+        }
+      }, 2500);
+      return;
     }
-  }, 2500);
-  return;
-}
 
     const response = await firebaseLogIn(logInState.email, logInState.password);
 
@@ -57,52 +55,56 @@ if (!logInState.email || !logInState.password ) {
     }
     //Reset message
     setTimeout(() => {
-      if(isMounted){setMessage({ words: null, styles: null });}
+      if (isMounted) {
+        setMessage({ words: null, styles: null });
+      }
     }, 2500);
   };
 
-  //sign uphandler 
-  const signUpHandler = async () =>{
+  //sign uphandler
+  const signUpHandler = async () => {
     //set to empty or else it will keep bc it a stack nav
-     setLogInState( { email: null, password: null });
+    setLogInState({ email: null, password: null });
 
-     //change isMounted 
-     await setIsMounted(false); 
+    //change isMounted
+    await setIsMounted(false);
 
-     //change message 
-     setMessage({ words: null, styles: null });
+    //change message
+    setMessage({ words: null, styles: null });
 
-     //navigate there
+    //navigate there
     navigation.navigate('SignUp');
-  
-  }
-
+  };
 
   return (
     <CenteredContainer>
-      <View style={styles.container}>
-        <Text>Log In Page</Text>
-        <TextInput
-          placeholder="Email"
-          value={logInState.email}
-          onChangeText={(address) => {
-            setLogInState({ ...logInState, email: address });
-          }}
-        />
-        <TextInput
-          placeholder="Password"
-          value={logInState.password}
-          onChangeText={(passwd) => {
-            setLogInState({ ...logInState, password: passwd });
-          }}
-        />
-        <View>
-          <Text onPress={signUpHandler}>Sign Up</Text>
-          <Text onPress={logInHandler}>Button</Text>
+      {ctx.loading ? (
+        <AppLoading />
+      ) : (
+        <View style={styles.container}>
+          <Text>Log In Page</Text>
+          <TextInput
+            placeholder="Email"
+            value={logInState.email}
+            onChangeText={(address) => {
+              setLogInState({ ...logInState, email: address });
+            }}
+          />
+          <TextInput
+            placeholder="Password"
+            value={logInState.password}
+            onChangeText={(passwd) => {
+              setLogInState({ ...logInState, password: passwd });
+            }}
+          />
+          <View>
+            <Text onPress={signUpHandler}>Sign Up</Text>
+            <Text onPress={logInHandler}>Button</Text>
 
-          {message.words ? <Text>{message.words}</Text> : null}
+            {message.words ? <Text>{message.words}</Text> : null}
+          </View>
         </View>
-      </View>
+      )}
     </CenteredContainer>
   );
 };
