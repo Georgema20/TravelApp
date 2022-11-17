@@ -1,15 +1,29 @@
+import { useState } from 'react';
 import { StyleSheet, TextInput, View} from 'react-native';
 
-const RectangleInputBox :React.FC<{placeholder:string, placeholderTextColor?:string, value:string, onChange: (word : string) => void }>= (props) => {
+const RectangleInputBox :React.FC<{placeholder:string, placeholderTextColor?:string, value:string, onChange: (word : string) => void , secured? : boolean}>= (props) => {
+
+const [placeholderExists, setPlaceholderExists] = useState<boolean>(true);
+
+const handleFocusEvent = (e: HTMLInputElement ) =>{
+  setPlaceholderExists(false);
+}
+
+const handleBlurEvent = (e: HTMLInputElement) => {
+  setPlaceholderExists(true);
+};
 
   return (
     <View style={styles.TextInputContainer}>
       <TextInput
-        placeholder={props.placeholder}
+        placeholder={placeholderExists ? props.placeholder : ''}
         placeholderTextColor={props.placeholderTextColor}
         value={props.value}
         onChangeText={props.onChange}
         style={styles.text}
+        secureTextEntry={props.secured}
+        onFocus={handleFocusEvent}
+        onBlur={handleBlurEvent}
       />
     </View>
   );
