@@ -71,17 +71,19 @@ const SignUpPage4 : React.FC = () => {
         placeholderTextColor="rgba(123, 123, 123, 1)"
         value={SignUpCtx.password}
         onChange={SignUpCtx.setPassword}
+        secured={true}
       />
       <RectangleInputBox
         placeholder="Confirm Password"
         placeholderTextColor="rgba(123, 123, 123, 1)"
         value={confirmPassword}
         onChange={setConfirmPassword}
+        secured={true}
       />
       {message.words != '' ? (
         <AvenirText style={styles.text} text={message.words} />
       ) : null}
-        <GenericButton1 onPress={goNext} text="Next" light={true} />
+      <GenericButton1 onPress={goNext} text="Next" light={true} />
     </CenteredContainer>
   );
 };

@@ -49,7 +49,7 @@ const SignUpPage5 : React.FC = () => {
     }
 
     if (!email.includes('@')) {
-      setMessage({ words: 'Please Put In A Valid Email!', styles: null });
+      setMessage({ words: 'Please put in a valid email!', styles: null });
 
       setTimeout(() => {
         setMessage({ words: '', styles: null });
@@ -76,7 +76,7 @@ const SignUpPage5 : React.FC = () => {
       }
       //Error case
       else {
-        setMessage({ words: response.message, styles: null });
+        setMessage({ words: response.message + '!', styles: null });
       //Reset message
       setTimeout(() => {
         setMessage({ words: '', styles: null });

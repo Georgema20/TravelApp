@@ -102,8 +102,13 @@ const LogInPage : React.FC = () => {
         onChange={(passwd) => {
           setLogInState({ ...logInState, password: passwd });
         }}
+      secured={true}
       />
-      <View>{message.words ? <AvenirText style={styles.text} text={message.words}/> : null}</View>
+      <View>
+        {message.words ? (
+          <AvenirText style={styles.text} text={message.words} />
+        ) : null}
+      </View>
       <GenericButton1 onPress={LogInHandler} text="Log In" light={false} />
     </CenteredContainer>
   );
