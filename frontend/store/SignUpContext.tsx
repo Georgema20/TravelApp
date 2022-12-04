@@ -1,5 +1,6 @@
 //Importing what we need for context
 import { createContext, useState, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 
 //Exporting the context // info
 //Creating it for first time to be used in provider
@@ -23,8 +24,7 @@ export const SignUpContext = createContext(
 
 //Place to manage the state and create a wrapper where auth can be accessed
 
-const SignUpContextProvider: React.FC = (props) => {
-
+const SignUpContextProvider: React.FC<{ children: ReactNode }> = (props) => {
   //Setting up states
   const [name, setName] = useState<string>('');
   const [birthday, setBirthday] = useState<Date>(new Date());
@@ -33,12 +33,12 @@ const SignUpContextProvider: React.FC = (props) => {
   const [password, setPassword] = useState<string>('');
 
   const clearAll = () => {
-     setName('');
-     setEmail('');
-     setPassword('');
-     setUsername('');
-     setBirthday(new Date());
-  }
+    setName('');
+    setEmail('');
+    setPassword('');
+    setUsername('');
+    setBirthday(new Date());
+  };
 
   //Thing that is passed down to everything in provider
   const value = {
@@ -52,11 +52,13 @@ const SignUpContextProvider: React.FC = (props) => {
     setUsername: setUsername,
     setEmail: setEmail,
     setPassword: setPassword,
-    clearAll: clearAll
+    clearAll: clearAll,
   };
 
   return (
-    <SignUpContext.Provider value={value}>{props.children}</SignUpContext.Provider>
+    <SignUpContext.Provider value={value}>
+      {props.children}
+    </SignUpContext.Provider>
   );
 };
 
