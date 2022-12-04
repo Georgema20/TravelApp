@@ -1,7 +1,7 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import { View, StyleSheet} from "react-native";
 
-const CenteredContainer : React.FC = (props) => {
+const CenteredContainer : React.FC<{children:ReactNode}> = (props) => {
   return <View style={styles.container}>
     {props.children}</View>
 }
