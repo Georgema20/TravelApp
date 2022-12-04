@@ -1,5 +1,6 @@
 //Importing what we need for context
 import { createContext, useState, useEffect} from "react";
+import React, { ReactNode } from 'react';
 
 //Importing what we need to store user stuff on the device 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,22 +22,23 @@ export const AuthContext = createContext(
 
 //Place to manage the state and create a wrapper where auth can be accessed 
 
-const AuthContextProvider : React.FC = (props) => {
-//Loading or not stage (to prevent weird transition if logged in)
+const AuthContextProvider: React.FC<{ children: ReactNode }> = (props) => {
+  //Loading or not stage (to prevent weird transition if logged in)
 
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-//When initialized check to see if anything in storage
-useEffect(() => {
-  //Get uid to see if anything
-  async function fetchToken() {
-    const storedUid = await AsyncStorage.getItem('uid');
+  //When initialized check to see if anything in storage
+  useEffect(() => {
+    //Get uid to see if anything
+    async function fetchToken() {
+      const storedUid = await AsyncStorage.getItem('uid');
 
-    //If found one then set
-    if (storedUid) {
-      setUid(storedUid);
+      //If found one then set
+      if (storedUid) {
+        setUid(storedUid);
+      }
+      setLoading(false);
     }
-  setLoading(false);}
     fetchToken();
   });
 
@@ -45,19 +47,20 @@ useEffect(() => {
   const [uid, setUid] = useState<string>('');
 
   //Authentication function
-  const authenticate = (uid: string) =>  {
+  const authenticate = (uid: string) => {
     //Setting token
     setUid(uid);
     //Store uid in device
     //Give token and item to store
-    AsyncStorage.setItem('uid', uid);}
+    AsyncStorage.setItem('uid', uid);
+  };
 
   //Log out function which sets the token to null
   const logout = () => {
     setUid('');
     //removing from storage;
     AsyncStorage.removeItem('uid');
-  }
+  };
 
   //Thing that is passed down to everything in provider
   const value = {
@@ -66,10 +69,12 @@ useEffect(() => {
     //Pass in functions to be used too
     authenticate: authenticate,
     logout: logout,
-    loading: loading
+    loading: loading,
   };
 
-  return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
-}
+  return (
+    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
+  );
+};
 
 export default AuthContextProvider;
